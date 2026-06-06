@@ -6,33 +6,54 @@
   <title>Shu-Sheng Winery — Opening</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #faf8f5;
-      --surface: #fdfbf7;
-      --surface-end: #f5f1e9;
-      --text: #2d3436;
-      --text-muted: #636e72;
-      --gold: #f9d342;
-      --gold-dark: #d4a82a;
-      --border: #eae3d9;
-      --wine: #8b3a4a;
-      --wine-deep: #5c1a28;
-      --clay-green: #7a9a6a;
-      --clay-green-dark: #5a7a4a;
-      --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.06);
-      --shadow-lift: 0 6px 20px rgba(0, 0, 0, 0.08);
-      --radius-card: 24px;
-      --radius-organic: 255px 15px 225px / 15px 225px 15px 255px;
-      --font: "Shippori Mincho B1", serif;
-      --ease-bounce: cubic-bezier(0.34, 1.4, 0.64, 1);
+      /* Mumu clay palette — warm, matte, chunky */
+      --clay-cream: #f2e0c4;
+      --clay-warm: #e8c99a;
+      --clay-bg: #ede4d0;
+      --clay-surface: #f5ead8;
+      --clay-brown: #5a3820; /* deeper clay brown for borders/shadows */
+      --clay-brown-light: #7b4f31;
+      --clay-terracotta: #c4622d;
+      --clay-orange: #e8943a;
+      --clay-mustard: #d4a832;
+      --clay-green: #5a7a48;
+      --clay-green-dark: #4a6840;
+      --clay-moss: #3d5c38;
+      --clay-red: #c44b3a;
+      --clay-purple: #7a5088;
+      --text: #4a3020;
+      --text-muted: #8b6e52;
+      --font: "M PLUS Rounded 1c", sans-serif;
+      --radius-chunky: 1.4vw;
+      --radius-pill: 10vw;
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      
+      /* Organic hand-molded clay border radii */
+      --radius-chunky-1: 1.8vw 1.3vw 1.6vw 1.4vw / 1.3vw 1.6vw 1.4vw 1.8vw;
+      --radius-chunky-2: 1.4vw 1.7vw 1.5vw 1.6vw / 1.7vw 1.5vw 1.6vw 1.4vw;
+      --radius-circle-organic: 48% 52% 51% 49% / 52% 48% 52% 48%;
+
+      /* Thick clay drop shadow and puffy inset lighting */
+      --clay-shadow-puffy:
+        0 0.6vw 0 var(--clay-brown),
+        0 0.3vw 0.8vw rgba(74, 48, 32, 0.2),
+        inset 0.2vw 0.2vw 0.4vw rgba(255, 255, 255, 0.65),
+        inset -0.2vw -0.2vw 0.4vw rgba(74, 48, 32, 0.15);
+      
+      --clay-lift:
+        0 0.7vw 0 var(--clay-brown),
+        0 0.4vw 1vw rgba(74, 48, 32, 0.22),
+        inset 0.2vw 0.2vw 0.4vw rgba(255, 255, 255, 0.7),
+        inset -0.2vw -0.2vw 0.4vw rgba(74, 48, 32, 0.15);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #1a1816;
+      background: #3a2818;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -48,95 +69,104 @@
       width:  min(100vw, calc(100vh * 16 / 9));
       height: min(100vh, calc(100vw * 9 / 16));
       overflow: hidden;
-      background: var(--bg);
-      background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+      background: var(--clay-bg);
     }
 
-    #stage::after {
+    /* ─── Background stack: clay image + paper texture ── */
+    .bg-stack {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .layer-bg-main {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      transition: filter 0.7s ease, transform 8s ease;
+    }
+
+    .paper-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+      background-size: 280px 280px;
+      opacity: 0.52;
+      mix-blend-mode: multiply;
+    }
+    .paper-overlay-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+      background-size: 400px 400px;
+      mix-blend-mode: multiply;
+    }
+
+    /* ─── Global Paper Textures ─── */
+    .global-paper {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+      opacity: 0.45;
+      mix-blend-mode: multiply;
+      background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+      background-size: 280px 280px;
+    }
+    .global-paper-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+      opacity: 0.18;
+      mix-blend-mode: multiply;
+      background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+      background-size: 400px 400px;
+    }
+
+    /* Jitter animation for stop-motion handmade feel */
+    @keyframes stop-motion-jitter {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-0.06vw, 0.08vw) rotate(-0.6deg) scaleX(1.005); }
+      50% { transform: translate(0.08vw, -0.06vw) rotate(0.6deg) scaleY(0.995); }
+      75% { transform: translate(-0.08vw, -0.08vw) rotate(-0.4deg) scaleX(0.995); }
+    }
+
+    /* Warm vignette over background only */
+    .bg-stack::after {
       content: '';
       position: absolute;
       inset: 0;
-      z-index: 98;
       pointer-events: none;
-      opacity: 0.35;
-      background-image:
-        repeating-linear-gradient(0deg,
-          transparent 0px, transparent 4px,
-          rgba(45,52,54,0.012) 4px, rgba(45,52,54,0.012) 5px);
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 50%, transparent 40%, rgba(74, 48, 32, 0.07) 100%),
+        radial-gradient(ellipse 60% 50% at 50% 85%, rgba(232, 148, 58, 0.12) 0%, transparent 70%);
     }
 
-    /* ─── SKY ──────────────────────────────────────── */
-    .layer-sky {
-      position: absolute;
-      inset: 0; height: 62%;
-      background: linear-gradient(180deg,
-        #fdfbf7 0%,
-        #f8f0e4 35%,
-        #f0e6d4 70%,
-        #e8dcc8 100%
-      );
-    }
-
-    /* ─── SUN (clay orb) ───────────────────────────── */
-    .layer-sun {
-      position: absolute;
-      top: 8%; right: 14%;
-      width: 8%; aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #fff8e0 0%, var(--gold) 55%, #e8b830 100%);
-      box-shadow:
-        0 0.4vw 1.2vw rgba(249, 211, 66, 0.35),
-        inset 0 -0.3vw 0.6vw rgba(212, 168, 42, 0.3);
-    }
-
-    /* ─── HILLS ─────────────────────────────────────── */
-    .layer-hills {
-      position: absolute;
-      bottom: 35%; left: 0; right: 0;
-      width: 100%; height: 32%;
-      pointer-events: none;
-      filter: drop-shadow(0 0.3vw 0.5vw rgba(90, 122, 74, 0.15));
-    }
-
-    /* ─── GROUND ───────────────────────────────────── */
-    .layer-ground {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 37%;
-      background: linear-gradient(180deg, #d4c4a8 0%, #c0a888 100%);
-    }
-
-    /* ─── ROAD ─────────────────────────────────────── */
-    .layer-road {
-      position: absolute;
-      bottom: 4%; left: 0; right: 0;
-      width: 100%; height: 26%;
-      pointer-events: none;
-    }
-
-    /* ─── WINERY BUILDING ─────────────────────────── */
+    /* ─── CLAY WINERY BUILDING (generated asset) ──── */
     #building {
       position: absolute;
-      bottom: 34%; right: 8%;
-      width: 20%; height: 24%;
+      bottom: 18%; right: 2%;
+      width: 30%;
+      height: auto;
       opacity: 0;
-      transition: opacity 0.6s ease;
+      transform: translateY(1.2vw) scale(0.88);
+      transition: opacity 0.7s ease, transform 0.7s var(--ease-bounce);
       pointer-events: none;
-      filter: drop-shadow(0.4vw 0.8vw 0.6vw rgba(45, 52, 54, 0.12));
+      z-index: 8;
+      filter: drop-shadow(0.8vw 1.1vw 0 var(--clay-brown));
     }
-    #building.visible { opacity: 1; }
-
-    /* ─── CLAY BARREL ─────────────────────────────── */
-    #clay-barrel {
-      position: absolute;
-      bottom: 34.5%; right: 31%;
-      width: 4.5%; height: 7%;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-      filter: drop-shadow(0.2vw 0.4vw 0.3vw rgba(45, 52, 54, 0.15));
+    #building.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      animation: stop-motion-jitter 2s steps(4) infinite;
     }
-    #clay-barrel.visible { opacity: 1; }
 
     /* ─── WINERY SIGN ─────────────────────────────── */
     #winery-sign {
@@ -145,18 +175,22 @@
       opacity: 0;
       transform: translateY(1vw) scale(0.92);
       transition: opacity 0.5s ease, transform 0.5s var(--ease-bounce);
+      z-index: 9;
     }
-    #winery-sign.visible { opacity: 1; transform: translateY(0) scale(1); }
+    #winery-sign.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      animation: stop-motion-jitter 1.8s steps(4) infinite;
+    }
 
     .sign-board {
-      background: var(--wine);
-      background-image: linear-gradient(160deg, rgba(255,255,255,0.18) 0%, transparent 55%);
-      color: #fdf8f4;
-      padding: 0.5vw 1.4vw;
-      border-radius: var(--radius-organic);
+      background: var(--clay-terracotta);
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-1);
+      color: #fff8f0;
+      padding: 0.55vw 1.5vw;
       text-align: center;
-      border: 0.12vw solid var(--border);
-      box-shadow: var(--shadow-lift), inset 0 0.1vw 0.3vw rgba(255,255,255,0.15);
+      box-shadow: var(--clay-shadow-puffy);
     }
     .sign-cn {
       font-size: 1.3vw; font-weight: 800; letter-spacing: 0.15em;
@@ -166,11 +200,13 @@
       letter-spacing: 0.08em;
     }
     .sign-post {
-      width: 0.45vw; height: 4vw;
-      background: linear-gradient(180deg, #a08060, #6a5040);
-      margin: 0 auto;
-      border-radius: 0.2vw;
-      box-shadow: 0.2vw 0 0.4vw rgba(45,52,54,0.1);
+      width: 0.6vw; height: 4vw;
+      background: var(--clay-brown);
+      margin: -0.1vw auto 0;
+      border-radius: 0.3vw 0.4vw 0.3vw 0.4vw / 1vw 1vw 1vw 1vw;
+      box-shadow:
+        0.3vw 0.3vw 0 rgba(74, 48, 32, 0.15),
+        inset 0.1vw 0.1vw 0.2vw rgba(255, 255, 255, 0.2);
     }
 
     /* ─── RUNNER (Doris) ──────────────────────────── */
@@ -186,8 +222,8 @@
       height: 100%; width: auto;
       object-fit: contain;
       filter:
-        contrast(1.05) brightness(1.02)
-        drop-shadow(0.3vw 0.6vw 0.4vw rgba(45, 52, 54, 0.18));
+        contrast(1.06) brightness(1.04) saturate(0.92)
+        drop-shadow(0.5vw 0.6vw 0 var(--clay-brown));
     }
 
     @keyframes run-bounce {
@@ -203,19 +239,18 @@
     #runner-wrap.running { animation: run-bounce 0.42s ease-in-out infinite; }
     #runner-wrap.idle    { animation: idle-bob   1.6s ease-in-out infinite; }
 
-    /* ─── DISCOVERY CARD (paper-card clay) ────────── */
+    /* ─── DISCOVERY CARD (chunky clay) ────────────── */
     #discovery-card {
       position: absolute;
       top: 10%; left: 50%;
       transform: translateX(-50%) translateY(1vw) scale(0.88);
       opacity: 0;
-      background: var(--surface);
-      background-image: linear-gradient(160deg, rgba(255,255,255,0.6) 0%, transparent 55%);
-      border: 0.15vw solid var(--border);
-      border-radius: var(--radius-organic);
-      padding: 1.2vw 2.6vw;
+      background: var(--clay-surface);
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-2);
+      padding: 1.3vw 2.8vw;
       text-align: center;
-      box-shadow: var(--shadow-card);
+      box-shadow: var(--clay-lift);
       min-width: 22vw;
       transition: opacity 0.45s ease, transform 0.45s var(--ease-bounce);
       z-index: 20;
@@ -223,14 +258,25 @@
     #discovery-card.visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0) scale(1);
+      animation: stop-motion-jitter 2.2s steps(4) infinite;
     }
-    .card-icon  { font-size: 3.2vw; line-height: 1; }
+    .card-icon-wrap {
+      width: 4.5vw; height: 4.5vw;
+      background: var(--clay-cream);
+      border: 0.2vw solid var(--clay-brown);
+      border-radius: var(--radius-circle-organic);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 0.4vw;
+      box-shadow:
+        0 0.3vw 0 var(--clay-brown),
+        inset 0.15vw 0.15vw 0.3vw rgba(255,255,255,0.6);
+    }
+    .card-icon  { font-size: 2.5vw; line-height: 1; }
     .card-title {
-      font-size: 1.4vw; color: var(--wine); font-weight: 800; margin-top: 0.4vw;
-      letter-spacing: -0.02em;
+      font-size: 1.4vw; color: var(--clay-terracotta); font-weight: 900; margin-top: 0.4vw;
     }
     .card-sub {
-      font-size: 0.8vw; color: var(--text-muted); margin-top: 0.3vw; font-weight: 600;
+      font-size: 0.8vw; color: var(--text-muted); margin-top: 0.3vw; font-weight: 700;
     }
 
     /* ─── ICONS LAYER (clay emoji stamps) ─────────── */
@@ -245,9 +291,21 @@
 
     .icon-item {
       position: absolute;
-      font-size: 2.6vw; opacity: 0;
-      filter: drop-shadow(0.3vw 0.5vw 0.3vw rgba(45,52,54,0.12));
+      opacity: 0;
+      width: 6.5vw; height: 6.5vw;
+      background: var(--clay-surface) url("assets/clay-icons-sheet.png") no-repeat;
+      background-size: 200% 200%;
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-circle-organic);
+      box-shadow:
+        0 0.5vw 0 var(--clay-brown),
+        0 0.2vw 0.6vw rgba(74, 48, 32, 0.15),
+        inset 0.15vw 0.15vw 0.3vw rgba(255,255,255,0.6);
     }
+    #ic-grape { background-position: 0% 0%; }
+    #ic-wine  { background-position: 100% 0%; }
+    #ic-note  { background-position: 0% 100%; }
+    #ic-map   { background-position: 100% 100%; }
 
     @keyframes icon-stamp {
       0%   { opacity: 0; transform: scale(0.3) rotate(-15deg); }
@@ -270,17 +328,21 @@
     .spotlight-vignette {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 70% 80% at 38% 50%,
-        rgba(250,248,245,0.15) 0%,
-        rgba(250,248,245,0.75) 55%,
-        rgba(245,241,233,0.95) 100%);
+      background:
+        radial-gradient(ellipse 60% 70% at 35% 50%, rgba(232, 148, 58, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 90% at 38% 50%,
+          rgba(242, 224, 196, 0.1) 0%,
+          rgba(237, 228, 208, 0.8) 55%,
+          rgba(232, 212, 180, 0.95) 100%);
     }
 
-    /* Clay winery backdrop behind Shu-Sheng */
+    /* Clay winery backdrop — AI generated */
     .spotlight-winery-bg {
       position: absolute;
       inset: 0;
-      opacity: 0.85;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
     }
 
     .shu-sheng-stage-wrap {
@@ -299,20 +361,23 @@
     .shu-sheng-stage {
       position: relative;
       width: 100%; height: 100%;
-      background: linear-gradient(to bottom, var(--surface), var(--surface-end));
-      border: 0.2vw solid var(--border);
-      border-radius: var(--radius-organic);
-      box-shadow: var(--shadow-card);
+      background: var(--clay-surface);
+      border: 0.4vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-2);
+      box-shadow:
+        0 0.8vw 0 var(--clay-brown),
+        0 0.4vw 1.2vw rgba(74, 48, 32, 0.2),
+        inset 0.3vw 0.3vw 0.6vw rgba(255, 255, 255, 0.6);
       overflow: hidden;
     }
 
-    /* Inner recessed clay frame */
+    /* Thick clay frame lip */
     .shu-sheng-stage::before {
       content: '';
       position: absolute;
-      inset: 0.6vw;
-      border-radius: calc(var(--radius-card) * 0.6);
-      box-shadow: inset 0 0.4vw 1.2vw rgba(45,52,54,0.08);
+      inset: 0.5vw;
+      border-radius: calc(var(--radius-chunky) * 0.7);
+      box-shadow: inset 0 0.5vw 1.4vw rgba(74, 48, 32, 0.15);
       pointer-events: none;
       z-index: 2;
     }
@@ -320,7 +385,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top right, transparent, rgba(255,255,255,0.08));
+      background: linear-gradient(to top right, transparent 40%, rgba(255, 255, 255, 0.12));
       pointer-events: none;
       z-index: 3;
     }
@@ -331,7 +396,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: calc(var(--radius-card) * 0.5);
+      border-radius: calc(var(--radius-chunky) * 0.6);
     }
 
     .shu-sheng-photo {
@@ -339,7 +404,8 @@
       height: 100%;
       object-fit: contain;
       object-position: center center;
-      filter: contrast(1.05) brightness(1.02) saturate(0.95);
+      filter: contrast(1.04) brightness(1.03) saturate(0.9) sepia(0.06);
+      border-radius: calc(var(--radius-chunky) * 0.5);
     }
 
     .shu-sheng-name-tag {
@@ -347,29 +413,30 @@
       bottom: 1.2vw; left: 50%;
       transform: translateX(-50%) translateY(0.5vw);
       opacity: 0;
-      background: var(--wine);
-      color: #fdf8f4;
-      padding: 0.5vw 2vw;
-      border-radius: var(--radius-organic);
-      font-size: 1.6vw;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      border: 0.12vw solid var(--border);
-      box-shadow: var(--shadow-lift);
+      background: var(--clay-terracotta);
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-1);
+      color: #fff8f0;
+      padding: 0.55vw 2.2vw;
+      font-size: 1.5vw;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      box-shadow: var(--clay-shadow-puffy);
       z-index: 5;
       transition: opacity 0.5s ease 0.4s, transform 0.5s var(--ease-bounce) 0.4s;
     }
     .shu-sheng-name-tag.visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
+      animation: stop-motion-jitter 1.5s steps(4) infinite;
     }
     .shu-sheng-name-tag span {
-      color: var(--gold);
-      font-size: 0.75vw;
+      color: var(--clay-mustard);
+      font-size: 0.7vw;
       display: block;
       letter-spacing: 0.35em;
       margin-bottom: 0.15vw;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     /* ─── KEYWORDS (Scene 5) — original pill card style ── */
@@ -386,51 +453,60 @@
 
     .kw-row {
       display: flex; align-items: center; gap: 1vw;
-      opacity: 0; transform: translateX(3vw);
-      background: #F8EDD8;
-      background-image: linear-gradient(160deg, rgba(255,255,255,0.45) 0%, transparent 55%);
-      padding: 0.55vw 1.8vw 0.55vw 0.8vw;
-      border-radius: 10vw 0.5vw 10vw 0.5vw / 0.5vw 10vw 0.5vw 10vw;
-      box-shadow:
-        0 0.5vw 1.5vw rgba(58,24,8,0.14),
-        0 0.2vw 0.5vw rgba(58,24,8,0.09),
-        inset 0 0.1vw 0.3vw rgba(255,255,255,0.5);
-      border: 0.08vw solid rgba(122,26,42,0.18);
-      transition: opacity 0.4s ease, transform 0.4s var(--ease-bounce);
+      opacity: 0; transform: translateX(3vw) scale(0.92);
+      background: var(--clay-cream);
+      border: 0.22vw solid var(--clay-brown);
+      border-radius: var(--radius-pill);
+      padding: 0.5vw 1.6vw 0.5vw 0.75vw;
+      box-shadow: var(--clay-lift);
+      transition: opacity 0.45s ease, transform 0.45s var(--ease-bounce);
     }
-    .kw-row.visible { opacity: 1; transform: translateX(0); }
+    .kw-row.visible {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      animation: stop-motion-jitter 2s steps(4) infinite;
+    }
 
     .kw-check {
-      width: 2.3vw; height: 2.3vw;
-      background: #7A1A2A;
-      background-image: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 55%);
-      border-radius: 50%;
+      width: 2.2vw; height: 2.2vw;
+      background: var(--clay-moss);
+      border: 0.2vw solid var(--clay-brown);
+      border-radius: var(--radius-circle-organic);
       display: flex; align-items: center; justify-content: center;
-      color: #FDF0F2; font-size: 1.1vw; flex-shrink: 0;
-      box-shadow: 0 0.3vw 0.8vw rgba(58,10,20,0.25),
-                  inset 0 0.1vw 0.2vw rgba(255,255,255,0.2);
+      color: #f0f8e8; font-size: 1.1vw; flex-shrink: 0;
+      box-shadow:
+        0 0.25vw 0 var(--clay-brown),
+        inset 0.1vw 0.1vw 0.2vw rgba(255, 255, 255, 0.5);
       font-weight: 900;
     }
     .kw-label {
-      font-size: 2.6vw; font-weight: 900;
-      color: #3A1808; letter-spacing: 0.02em;
+      font-size: 2.5vw; font-weight: 900;
+      color: var(--text);
     }
 
     /* ─── SCENE TEXT ──────────────────────────────── */
     #scene-text {
       position: absolute;
-      bottom: 6%; left: 0; right: 0;
+      bottom: 5.5%; left: 50%;
+      transform: translateX(-50%) translateY(0.5vw);
       text-align: center;
-      font-size: 1.7vw; font-style: italic; font-weight: 700;
-      color: var(--text); letter-spacing: 0.01em;
+      font-size: 1.5vw; font-weight: 800;
+      color: var(--text);
       opacity: 0;
-      transition: opacity 0.45s ease;
+      transition: opacity 0.45s ease, transform 0.45s var(--ease-bounce);
       z-index: 35; pointer-events: none;
-      text-shadow:
-        0 0 2vw rgba(250,248,245,0.95),
-        0 0 4vw rgba(250,248,245,0.7);
+      background: var(--clay-surface);
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-1);
+      padding: 0.65vw 2.2vw;
+      box-shadow: var(--clay-lift);
+      white-space: nowrap;
     }
-    #scene-text.visible { opacity: 1; }
+    #scene-text.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      animation: stop-motion-jitter 2.5s steps(4) infinite;
+    }
 
     /* ─── FOLD OVERLAY ────────────────────────────── */
     #fold-overlay {
@@ -449,8 +525,8 @@
       top: 0;
       transform-origin: center top;
       transform: perspective(2000px) rotateX(0deg);
-      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-end) 100%);
-      box-shadow: inset 0 -2px 0 var(--border);
+      background: linear-gradient(180deg, var(--clay-surface) 0%, var(--clay-warm) 100%);
+      box-shadow: inset 0 -3px 0 rgba(74, 48, 32, 0.1);
     }
     #fold-top::after {
       content: '🍷';
@@ -463,8 +539,8 @@
       bottom: 0;
       transform-origin: center bottom;
       transform: perspective(2000px) rotateX(0deg);
-      background: linear-gradient(180deg, var(--surface-end) 0%, #d4c4a8 100%);
-      box-shadow: inset 0 2px 0 var(--border);
+      background: linear-gradient(180deg, var(--clay-warm) 0%, #c8a878 100%);
+      box-shadow: inset 0 3px 0 rgba(74, 48, 32, 0.1);
     }
     #fold-bottom::after {
       content: '🍇';
@@ -477,58 +553,71 @@
     #fold-top.fold    { transform: perspective(2000px) rotateX(-105deg); }
     #fold-bottom.fold { transform: perspective(2000px) rotateX(105deg);  }
 
-    /* ─── FINAL SCENE ─────────────────────────────── */
+    /* ─── FINAL SCENE — warm clay room tone ───────── */
     #final-scene {
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, var(--wine-deep) 0%, var(--wine) 50%, var(--wine-deep) 100%);
-      background-image:
-        url("https://www.transparenttextures.com/patterns/paper-fibers.png"),
-        linear-gradient(135deg, var(--wine-deep) 0%, var(--wine) 50%, var(--wine-deep) 100%);
+      background: linear-gradient(160deg, #5a3820 0%, var(--clay-brown) 45%, #4a2e18 100%);
       display: flex; flex-direction: column;
       justify-content: center; align-items: center;
       opacity: 0; pointer-events: none;
       transition: opacity 0.6s ease;
       z-index: 50;
     }
+    #final-scene::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 80%, rgba(232, 148, 58, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
     #final-scene.visible { opacity: 1; pointer-events: all; }
 
     .final-eyebrow {
-      font-size: 0.8vw; color: var(--gold);
-      letter-spacing: 0.35em; text-transform: uppercase;
-      margin-bottom: 1.5vw; font-weight: 800;
+      font-size: 0.75vw; color: var(--clay-mustard);
+      letter-spacing: 0.4em; text-transform: uppercase;
+      margin-bottom: 1.5vw; font-weight: 900;
     }
     .final-title {
-      font-size: 3vw; color: #ffffff;
-      font-weight: 800; text-align: center;
-      line-height: 1.25; margin-bottom: 0.9vw; max-width: 72%;
-      letter-spacing: -0.02em;
+      font-size: 2.8vw; color: var(--clay-cream);
+      font-weight: 900; text-align: center;
+      line-height: 1.3; margin-bottom: 0.9vw; max-width: 72%;
     }
     .final-subtitle {
-      font-size: 1.2vw; color: rgba(255,255,255,0.82);
-      font-style: italic; text-align: center;
-      margin-bottom: 3.2vw; font-weight: 600;
+      font-size: 1.15vw; color: var(--clay-warm);
+      text-align: center;
+      margin-bottom: 3vw; font-weight: 700;
     }
     .btn-start {
-      padding: 0.85vw 3.2vw;
-      background: var(--gold); color: var(--text);
-      border: 0.12vw solid var(--border);
-      border-radius: var(--radius-organic);
+      padding: 0.8vw 3.2vw;
+      background: var(--clay-mustard);
+      border: 0.25vw solid var(--clay-brown);
+      border-radius: var(--radius-pill);
       font-family: var(--font);
-      font-size: 1vw; font-weight: 800; letter-spacing: 0.06em;
+      font-size: 1.1vw; font-weight: 900; letter-spacing: 0.05em;
+      color: var(--text);
       cursor: pointer;
-      box-shadow: var(--shadow-lift);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      box-shadow:
+        0 0.5vw 0 var(--clay-brown),
+        inset 0.18vw 0.18vw 0.3vw rgba(255, 255, 255, 0.5);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
     .btn-start:hover {
-      transform: translateY(-0.15vw);
-      box-shadow: 0 0.8vw 2vw rgba(249, 211, 66, 0.35);
+      transform: translateY(-0.1vw);
+      box-shadow:
+        0 0.6vw 0 var(--clay-brown),
+        inset 0.18vw 0.18vw 0.3vw rgba(255, 255, 255, 0.5);
     }
-    .btn-start:active { transform: translateY(0.08vw); }
+    .btn-start:active {
+      transform: translateY(0.3vw);
+      box-shadow:
+        0 0.2vw 0 var(--clay-brown),
+        inset 0.1vw 0.1vw 0.2vw rgba(255, 255, 255, 0.3);
+    }
 
     .final-deco {
       position: absolute; bottom: 4%;
-      font-size: 1.3vw; letter-spacing: 0.5em;
-      opacity: 0.15; color: var(--gold);
+      font-size: 1.2vw; letter-spacing: 0.5em;
+      opacity: 0.2; color: var(--clay-mustard);
     }
 
     /* ─── PROGRESS DOTS ───────────────────────────── */
@@ -539,117 +628,49 @@
       display: flex; gap: 0.5vw; z-index: 60;
     }
     .pdot {
-      width: 0.55vw; height: 0.55vw; border-radius: 50%;
-      background: var(--border);
+      width: 0.9vw; height: 0.9vw;
+      background: var(--clay-cream);
+      border: 0.15vw solid var(--clay-brown);
+      border-radius: var(--radius-circle-organic);
+      box-shadow:
+        0 0.15vw 0 var(--clay-brown),
+        inset 0.05vw 0.05vw 0.1vw rgba(255,255,255,0.4);
       transition: background 0.35s ease, transform 0.25s ease, box-shadow 0.25s ease;
     }
     .pdot.active {
-      background: var(--gold);
-      transform: scale(1.4);
-      box-shadow: 0 2px 4px rgba(249, 211, 66, 0.35);
+      background: var(--clay-orange);
+      transform: scale(1.3);
+      box-shadow:
+        0 0.25vw 0 var(--clay-brown),
+        inset 0.08vw 0.08vw 0.15vw rgba(255,255,255,0.5);
     }
 
-    /* Dim background layers during spotlight */
-    #stage.spotlight-mode .layer-sky,
-    #stage.spotlight-mode .layer-sun,
-    #stage.spotlight-mode .layer-hills,
-    #stage.spotlight-mode .layer-ground,
-    #stage.spotlight-mode .layer-road,
+    /* Dim main scene during spotlight */
+    #stage.spotlight-mode .bg-stack,
     #stage.spotlight-mode #building,
-    #stage.spotlight-mode #clay-barrel,
     #stage.spotlight-mode #winery-sign {
-      filter: blur(2px) brightness(0.7);
-      transition: filter 0.6s ease;
+      filter: blur(4px) brightness(0.6) saturate(0.85);
+      transition: filter 0.7s ease;
+    }
+
+    /* Paper texture on spotlight bg too */
+    #shu-sheng-spotlight .paper-overlay {
+      z-index: 2;
+      opacity: 0.38;
     }
   </style>
 </head>
 <body>
 <div id="stage">
 
-  <div class="layer-sky"></div>
-  <div class="layer-sun"></div>
+  <div class="bg-stack">
+    <img class="layer-bg-main" src="assets/bg-main-scene.png" alt="">
+    <div class="paper-overlay"></div>
+    <div class="paper-overlay-grain"></div>
+  </div>
 
-  <!-- Clay hills + vineyard -->
-  <svg class="layer-hills" viewBox="0 0 1600 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,300 C180,178 322,232 480,172 C638,112 740,196 900,138 C1060,80 1162,160 1310,118 C1422,81 1540,150 1600,122 L1600,300 Z"
-          fill="#8aaa72"/>
-    <path d="M0,300 C180,185 322,239 480,179 C638,119 740,203 900,145 L1600,129 L1600,300 Z"
-          fill="#6a8a58" opacity="0.4"/>
-
-    <path d="M0,300 C148,234 302,180 480,212 C660,244 782,164 982,190 C1144,210 1286,154 1446,190 C1546,212 1596,222 1600,232 L1600,300 Z"
-          fill="#a0b888"/>
-    <path d="M0,300 C148,241 302,187 480,219 C660,251 782,171 982,197 L1600,239 L1600,300 Z"
-          fill="#88a070" opacity="0.38"/>
-
-    <path d="M0,300 C222,258 372,206 558,240 C724,268 872,216 1022,241 C1174,268 1324,216 1514,250 L1600,258 L1600,300 Z"
-          fill="#b8cc9e"/>
-    <path d="M0,300 C222,265 372,213 558,247 C724,275 872,223 1022,248 L1600,265 L1600,300 Z"
-          fill="#9ab080" opacity="0.38"/>
-
-    <!-- Clay grape clusters -->
-    <circle cx="870" cy="194" r="9" fill="#7a5088"/>
-    <circle cx="887" cy="187" r="9" fill="#8a6098"/>
-    <circle cx="879" cy="176" r="9" fill="#6a4078"/>
-    <circle cx="897" cy="197" r="9" fill="#7a5088"/>
-    <circle cx="862" cy="183" r="9" fill="#5a3068"/>
-    <line x1="879" y1="165" x2="879" y2="176" stroke="#6a8a58" stroke-width="4" stroke-linecap="round"/>
-
-    <circle cx="1062" cy="188" r="8" fill="#7a5088"/>
-    <circle cx="1078" cy="181" r="8" fill="#8a6098"/>
-    <circle cx="1070" cy="171" r="8" fill="#5a3068"/>
-    <line x1="1070" y1="161" x2="1070" y2="171" stroke="#6a8a58" stroke-width="4" stroke-linecap="round"/>
-
-    <!-- Distant clay farmhouse -->
-    <rect x="1348" y="126" width="82" height="54" fill="#d4c0a0" rx="4"/>
-    <polygon points="1330,126 1389,86 1448,126" fill="#b8a080"/>
-    <rect x="1370" y="140" width="20" height="16" fill="#f9d342" rx="2" opacity="0.7"/>
-  </svg>
-
-  <div class="layer-ground"></div>
-
-  <svg class="layer-road" viewBox="0 0 1600 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1600" height="160" fill="#c8b090"/>
-    <rect width="1600" height="4" fill="#d8c8a8" opacity="0.6"/>
-    <g fill="#d4c4a8" opacity="0.45">
-      <rect x="0" y="72" width="80" height="4" rx="2"/>
-      <rect x="130" y="72" width="80" height="4" rx="2"/>
-      <rect x="260" y="72" width="80" height="4" rx="2"/>
-      <rect x="390" y="72" width="80" height="4" rx="2"/>
-      <rect x="520" y="72" width="80" height="4" rx="2"/>
-      <rect x="650" y="72" width="80" height="4" rx="2"/>
-      <rect x="780" y="72" width="80" height="4" rx="2"/>
-      <rect x="910" y="72" width="80" height="4" rx="2"/>
-      <rect x="1040" y="72" width="80" height="4" rx="2"/>
-      <rect x="1170" y="72" width="80" height="4" rx="2"/>
-      <rect x="1300" y="72" width="80" height="4" rx="2"/>
-      <rect x="1430" y="72" width="80" height="4" rx="2"/>
-    </g>
-  </svg>
-
-  <!-- Clay winery building -->
-  <svg id="building" viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="264,73 312,94 312,210 264,210" fill="#a89070"/>
-    <rect x="18" y="73" width="248" height="137" fill="#e8dcc8" rx="4"/>
-    <rect x="20" y="75" width="60" height="133" fill="rgba(255,255,255,0.15)" rx="3"/>
-    <polygon points="8,73 152,10 278,73" fill="#c8b090"/>
-    <polygon points="264,73 312,94 156,31 152,10" fill="#a08060"/>
-    <rect x="110" y="148" width="64" height="62" fill="#8a7060" rx="4"/>
-    <rect x="42" y="96" width="56" height="44" fill="#f9d342" rx="3" opacity="0.75"/>
-    <rect x="196" y="96" width="56" height="44" fill="#f9d342" rx="3" opacity="0.75"/>
-    <rect x="84" y="60" width="134" height="25" fill="#8b3a4a" rx="4"/>
-    <text x="151" y="77" text-anchor="middle"
-          font-family="serif" font-size="11" font-weight="bold"
-          fill="#fdf8f4" letter-spacing="1.5">樹生酒莊</text>
-  </svg>
-
-  <svg id="clay-barrel" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="40" cy="14" rx="36" ry="13" fill="#c8a070"/>
-    <ellipse cx="32" cy="11" rx="14" ry="5" fill="rgba(255,255,255,0.25)"/>
-    <rect x="4" y="14" width="72" height="68" fill="#d4b080" rx="5"/>
-    <rect x="1" y="30" width="78" height="7" fill="#a07040" rx="3"/>
-    <rect x="1" y="60" width="78" height="7" fill="#a07040" rx="3"/>
-    <ellipse cx="40" cy="82" rx="36" ry="13" fill="#b89060"/>
-  </svg>
+  <!-- AI-generated clay winery building -->
+  <img id="building" src="assets/clay-winery-building.png" alt="樹生酒莊">
 
   <div id="winery-sign">
     <div class="sign-board">
@@ -660,105 +681,31 @@
   </div>
 
   <div id="discovery-card">
-    <div class="card-icon">🥇</div>
+    <div class="card-icon-wrap">
+      <div class="card-icon">🥇</div>
+    </div>
     <div class="card-title">Gold Medal Wines</div>
     <div class="card-sub">International Award Winner</div>
   </div>
 
   <div id="icons-layer">
-    <span class="icon-item" id="ic-grape" style="top:8%;  left:6%;">🍇</span>
-    <span class="icon-item" id="ic-wine"  style="top:18%; left:46%;">🍷</span>
-    <span class="icon-item" id="ic-note"  style="top:2%;  left:74%;">📝</span>
-    <span class="icon-item" id="ic-map"   style="top:52%; left:22%;">🗺️</span>
+    <div class="icon-item" id="ic-grape" style="top:8%;  left:6%;"></div>
+    <div class="icon-item" id="ic-wine"  style="top:18%; left:46%;"></div>
+    <div class="icon-item" id="ic-note"  style="top:2%;  left:74%;"></div>
+    <div class="icon-item" id="ic-map"   style="top:52%; left:22%;"></div>
   </div>
 
   <!-- ── Shu-Sheng Spotlight (Scene 5) ─────────────── -->
   <div id="shu-sheng-spotlight">
     <div class="spotlight-vignette"></div>
 
-    <!-- Clay winery SVG backdrop -->
-    <svg class="spotlight-winery-bg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fdfbf7"/>
-          <stop offset="100%" stop-color="#f0e6d4"/>
-        </linearGradient>
-        <linearGradient id="vineGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#8aaa72"/>
-          <stop offset="100%" stop-color="#6a8a58"/>
-        </linearGradient>
-      </defs>
-      <rect width="1600" height="900" fill="url(#skyGrad)"/>
-
-      <!-- Rolling vineyard hills -->
-      <path d="M0,600 C200,480 400,520 600,460 C800,400 1000,480 1200,420 C1400,360 1500,400 1600,380 L1600,900 L0,900 Z" fill="#a0b888"/>
-      <path d="M0,650 C250,560 450,580 700,520 C950,460 1150,500 1400,470 L1600,460 L1600,900 L0,900 Z" fill="#8aaa72"/>
-
-      <!-- Grape vine trellis (clay style) -->
-      <g opacity="0.7">
-        <rect x="200" y="80" width="1200" height="12" fill="#a08060" rx="6"/>
-        <line x1="280" y1="92" x2="280" y2="380" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-        <line x1="480" y1="92" x2="480" y2="400" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-        <line x1="680" y1="92" x2="680" y2="390" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-        <line x1="880" y1="92" x2="880" y2="410" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-        <line x1="1080" y1="92" x2="1080" y2="385" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-        <line x1="1280" y1="92" x2="1280" y2="395" stroke="#8a7060" stroke-width="6" stroke-linecap="round"/>
-      </g>
-
-      <!-- Clay grape leaves canopy -->
-      <ellipse cx="400" cy="200" rx="120" ry="60" fill="url(#vineGrad)" opacity="0.85"/>
-      <ellipse cx="700" cy="180" rx="140" ry="70" fill="url(#vineGrad)" opacity="0.9"/>
-      <ellipse cx="1000" cy="195" rx="130" ry="65" fill="url(#vineGrad)" opacity="0.85"/>
-      <ellipse cx="1300" cy="185" rx="110" ry="55" fill="url(#vineGrad)" opacity="0.8"/>
-
-      <!-- Grape clusters -->
-      <g>
-        <circle cx="380" cy="240" r="14" fill="#7a5088"/><circle cx="400" cy="228" r="14" fill="#8a6098"/>
-        <circle cx="420" cy="242" r="14" fill="#6a4078"/><circle cx="395" cy="255" r="12" fill="#5a3068"/>
-        <circle cx="680" cy="230" r="14" fill="#7a5088"/><circle cx="700" cy="218" r="14" fill="#8a6098"/>
-        <circle cx="720" cy="232" r="14" fill="#6a4078"/>
-        <circle cx="980" cy="235" r="14" fill="#7a5088"/><circle cx="1000" cy="223" r="14" fill="#8a6098"/>
-        <circle cx="1020" cy="237" r="14" fill="#6a4078"/>
-      </g>
-
-      <!-- Stone wall (like the photo background) -->
-      <rect x="0" y="480" width="1600" height="80" fill="#c0b0a0"/>
-      <g>
-        <ellipse cx="80"  cy="520" rx="35" ry="22" fill="#b0a090"/><ellipse cx="160" cy="518" rx="38" ry="24" fill="#a89888"/>
-        <ellipse cx="250" cy="522" rx="36" ry="23" fill="#b8a898"/><ellipse cx="340" cy="519" rx="37" ry="23" fill="#a89080"/>
-        <ellipse cx="430" cy="521" rx="35" ry="22" fill="#b0a090"/><ellipse cx="520" cy="518" rx="38" ry="24" fill="#a89888"/>
-        <ellipse cx="610" cy="522" rx="36" ry="23" fill="#b8a898"/><ellipse cx="700" cy="519" rx="37" ry="23" fill="#a89080"/>
-        <ellipse cx="790" cy="521" rx="35" ry="22" fill="#b0a090"/><ellipse cx="880" cy="518" rx="38" ry="24" fill="#a89888"/>
-        <ellipse cx="970" cy="522" rx="36" ry="23" fill="#b8a898"/><ellipse cx="1060" cy="519" rx="37" ry="23" fill="#a89080"/>
-        <ellipse cx="1150" cy="521" rx="35" ry="22" fill="#b0a090"/><ellipse cx="1240" cy="518" rx="38" ry="24" fill="#a89888"/>
-        <ellipse cx="1330" cy="522" rx="36" ry="23" fill="#b8a898"/><ellipse cx="1420" cy="519" rx="37" ry="23" fill="#a89080"/>
-        <ellipse cx="1510" cy="521" rx="35" ry="22" fill="#b0a090"/>
-      </g>
-
-      <!-- Clay barrels row -->
-      <g transform="translate(1100, 560)">
-        <ellipse cx="30" cy="10" rx="28" ry="10" fill="#c8a070"/>
-        <rect x="2" y="10" width="56" height="50" fill="#d4b080" rx="4"/>
-        <ellipse cx="30" cy="60" rx="28" ry="10" fill="#b89060"/>
-      </g>
-      <g transform="translate(1180, 570)">
-        <ellipse cx="25" cy="8" rx="23" ry="8" fill="#c8a070"/>
-        <rect x="2" y="8" width="46" height="42" fill="#d4b080" rx="4"/>
-        <ellipse cx="25" cy="50" rx="23" ry="8" fill="#b89060"/>
-      </g>
-
-      <!-- Winery building silhouette -->
-      <rect x="60" y="420" width="180" height="120" fill="#e8dcc8" rx="4"/>
-      <polygon points="40,420 150,350 260,420" fill="#c8b090"/>
-      <rect x="120" y="470" width="50" height="70" fill="#8a7060" rx="3"/>
-      <rect x="80" y="440" width="35" height="30" fill="#f9d342" rx="2" opacity="0.7"/>
-      <rect x="170" y="440" width="35" height="30" fill="#f9d342" rx="2" opacity="0.7"/>
-    </svg>
+    <img class="spotlight-winery-bg" src="assets/bg-spotlight-winery.png" alt="">
+    <div class="paper-overlay"></div>
 
     <div class="shu-sheng-stage-wrap" id="shu-sheng-stage-wrap">
       <div class="shu-sheng-stage">
         <div class="shu-sheng-photo-wrap">
-          <img src="shu-sheng-photo.png" alt="樹生 — Shu Sheng" class="shu-sheng-photo">
+          <img src="assets/shu-sheng-photo.png" alt="樹生 — Shu Sheng" class="shu-sheng-photo">
         </div>
         <div class="shu-sheng-name-tag" id="shu-sheng-name-tag">
           <span>FOUNDER</span>
@@ -813,6 +760,10 @@
     <div class="pdot" id="d5"></div>
   </div>
 
+  <!-- Global paper texture overlays to bind photos and 3D scenes -->
+  <div class="global-paper"></div>
+  <div class="global-paper-grain"></div>
+
 </div>
 
 <script>
@@ -839,7 +790,6 @@
   const sceneText = $('scene-text');
   const sign      = $('winery-sign');
   const building  = $('building');
-  const barrel    = $('clay-barrel');
   const card      = $('discovery-card');
   const icons     = $('icons-layer');
   const kwLayer   = $('keywords-layer');
@@ -888,16 +838,20 @@
       runner.classList.add('running');
       runner.classList.remove('idle');
       moveRunner(22, 3400);
+      /* subtle Ken Burns on clay background */
+      const bg = document.querySelector('.layer-bg-main');
+      if (bg) { bg.style.transform = 'scale(1.04) translateX(-1%)'; }
       showText(TEXTS[1]);
     },
     2() {
       dot(1);
       hideText();
       moveRunner(44, 2800);
+      const bg = document.querySelector('.layer-bg-main');
+      if (bg) { bg.style.transform = 'scale(1.07) translateX(-2.5%)'; }
       setTimeout(() => {
         sign.classList.add('visible');
         building.classList.add('visible');
-        barrel.classList.add('visible');
         showText(TEXTS[2], 700);
       }, 600);
     },
