@@ -222,10 +222,11 @@
     /* ─── RUNNER (Doris) ──────────────────────────── */
     #runner-wrap {
       position: absolute;
-      bottom: 25%; left: -15%;
+      bottom: 50%; left: 75%;
+      transform: scale(0.32);
       height: 32%; width: auto;
       z-index: 10;
-      will-change: left;
+      will-change: left, bottom, transform;
       transition: opacity 0.5s ease;
     }
     #runner-wrap img {
@@ -252,8 +253,8 @@
     /* ─── DISCOVERY CARD (chunky clay) ────────────── */
     #discovery-card {
       position: absolute;
-      top: 10%; left: 50%;
-      transform: translateX(-50%) translateY(1vw) scale(0.88);
+      top: 8%; right: 5%;
+      transform: translateY(1vw) scale(0.88);
       opacity: 0;
       background: var(--clay-surface);
       border: 0.25vw solid var(--clay-brown);
@@ -268,8 +269,8 @@
     }
     #discovery-card.visible {
       opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-      animation: stop-motion-jitter-centered 2.2s steps(4) infinite;
+      transform: translateY(0) scale(1);
+      animation: stop-motion-jitter 2.2s steps(4) infinite;
     }
     .card-icon-wrap {
       width: 4.5vw; height: 4.5vw;
@@ -514,7 +515,9 @@
       border-radius: var(--radius-chunky-1);
       padding: 0.65vw 2.2vw;
       box-shadow: var(--clay-lift);
-      white-space: nowrap;
+      white-space: normal;
+      max-width: 85%;
+      width: max-content;
       filter: saturate(0.78);
     }
     #scene-text.visible {
@@ -673,6 +676,217 @@
       z-index: 2;
       opacity: 0.38;
     }
+
+    /* ─── SURPRISED DORIS CLOSE-UP ─── */
+    .face-popup {
+      position: absolute;
+      bottom: 8%; left: 50%;
+      transform: translateX(-50%) translateY(2vw) scale(0.6);
+      height: 70%; width: auto;
+      z-index: 28;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s var(--ease-bounce);
+      pointer-events: none;
+    }
+    .face-popup.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    .face-popup img {
+      height: 100%; width: auto;
+      object-fit: contain;
+      filter:
+        contrast(1.04) brightness(1.02) saturate(0.88)
+        drop-shadow(0.7vw 0.9vw 0 var(--clay-brown));
+    }
+    .q-mark {
+      position: absolute;
+      font-size: 5.5vw;
+      font-weight: 900;
+      color: var(--clay-orange);
+      text-shadow: 0.25vw 0.25vw 0 var(--clay-brown);
+      opacity: 0;
+      transform: scale(0.4) rotate(-20deg);
+      transition: opacity 0.5s ease, transform 0.5s var(--ease-bounce);
+      filter: drop-shadow(0.3vw 0.4vw 0 rgba(74, 48, 32, 0.15));
+      z-index: 29;
+    }
+    .face-popup.visible .q-mark {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+      animation: q-mark-float 2.2s ease-in-out infinite alternate;
+    }
+    @keyframes q-mark-float {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-1.2vw) rotate(12deg); }
+    }
+
+    /* ─── CLAY CAR WRAP ─── */
+    #car-wrap {
+      position: absolute;
+      bottom: 15%; left: 115%;
+      width: 34vw; height: auto;
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: left 5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #car-wrap.visible {
+      opacity: 1;
+      left: 10%;
+    }
+    #clay-car {
+      width: 100%;
+      height: auto;
+      z-index: 2;
+      filter: drop-shadow(0.6vw 0.8vw 0 var(--clay-brown)) saturate(0.85);
+    }
+    @keyframes car-jump {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(-1.2vw) rotate(2deg); }
+      40% { transform: translateY(0) rotate(-1.5deg); }
+      60% { transform: translateY(-0.9vw) rotate(-2deg); }
+      80% { transform: translateY(0) rotate(1.5deg); }
+    }
+    #car-wrap.bouncing {
+      animation: car-jump 0.55s ease-in-out infinite;
+    }
+
+    /* ─── INTERVIEW PHOTOS LAYER ─── */
+    #interview-photos-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5vw;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 25;
+    }
+    #interview-photos-layer.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .clay-photo-frame {
+      width: 26vw;
+      background: var(--clay-surface);
+      border: 0.28vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-2);
+      padding: 0.9vw;
+      box-shadow: var(--clay-lift);
+      opacity: 0;
+      transform: scale(0.8) rotate(-8deg);
+      transition: opacity 0.6s var(--ease-bounce), transform 0.6s var(--ease-bounce);
+      filter: saturate(0.88);
+    }
+    #photo-frame-1 {
+      transform: scale(0.8) rotate(-6deg);
+    }
+    #photo-frame-2 {
+      transform: scale(0.8) rotate(6deg);
+      transition-delay: 0.25s;
+    }
+    #interview-photos-layer.visible #photo-frame-1 {
+      opacity: 1;
+      transform: scale(1) rotate(-3deg);
+      animation: stop-motion-jitter 2.2s steps(4) infinite;
+    }
+    #interview-photos-layer.visible #photo-frame-2 {
+      opacity: 1;
+      transform: scale(1) rotate(4deg);
+      animation: stop-motion-jitter 2s steps(4) infinite 0.15s;
+    }
+    .photo-inner {
+      width: 100%;
+      height: 16.5vw;
+      overflow: hidden;
+      border: 0.2vw solid var(--clay-brown);
+      border-radius: calc(var(--radius-chunky) * 0.5);
+      background: #000;
+    }
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-caption {
+      font-size: 1.2vw;
+      font-weight: 900;
+      color: var(--text);
+      text-align: center;
+      margin-top: 0.7vw;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── WINE SPOTLIGHT LAYER ─── */
+    #wine-spotlight-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+      z-index: 27;
+    }
+    #wine-spotlight-layer.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .wine-glow-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48vw;
+      height: 48vw;
+      background: radial-gradient(circle, rgba(232, 148, 58, 0.45) 0%, rgba(232, 148, 58, 0.15) 55%, transparent 75%);
+      border-radius: 50%;
+      animation: glow-pulse 2.2s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+    @keyframes glow-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.88); opacity: 0.65; }
+      100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.95; }
+    }
+    .wine-bottle-container {
+      position: relative;
+      height: 70%;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: scale(0.7) translateY(3vw);
+      transition: transform 0.6s var(--ease-bounce);
+    }
+    #wine-spotlight-layer.visible .wine-bottle-container {
+      transform: scale(1) translateY(0);
+      animation: stop-motion-jitter 1.8s steps(4) infinite;
+    }
+    .wine-bottle-img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0.7vw 0.9vw 0 var(--clay-brown));
+    }
+    .medal-badge {
+      position: absolute;
+      top: 14%;
+      right: -12%;
+      font-size: 5vw;
+      opacity: 0;
+      transform: scale(0) rotate(-35deg);
+      transition: opacity 0.5s var(--ease-bounce) 0.3s, transform 0.5s var(--ease-bounce) 0.3s;
+    }
+    #wine-spotlight-layer.visible .medal-badge {
+      opacity: 1;
+      transform: scale(1) rotate(12deg);
+    }
   </style>
 </head>
 <body>
@@ -710,45 +924,53 @@
     <div class="icon-item" id="ic-map"   style="top:52%; left:22%;"></div>
   </div>
 
-  <!-- ── Shu-Sheng Spotlight (Scene 5) ─────────────── -->
-  <div id="shu-sheng-spotlight">
-    <div class="spotlight-vignette"></div>
-
-    <img class="spotlight-winery-bg" src="assets/bg-spotlight-winery.png" alt="">
-    <div class="paper-overlay"></div>
-
-    <div class="shu-sheng-stage-wrap" id="shu-sheng-stage-wrap">
-      <div class="shu-sheng-stage">
-        <div class="shu-sheng-photo-wrap">
-          <img src="assets/shu-sheng-photo.png" alt="樹生 — Shu Sheng" class="shu-sheng-photo">
-        </div>
-        <div class="shu-sheng-name-tag" id="shu-sheng-name-tag">
-          <span>FOUNDER</span>
-          樹生
-        </div>
+  <!-- Interview Photos Layer (Scene 8) -->
+  <div id="interview-photos-layer">
+    <div class="clay-photo-frame" id="photo-frame-1">
+      <div class="photo-inner">
+        <img src="assets/interview1.jpg" alt="Under grape vines">
       </div>
+      <div class="photo-caption">Vineyard Tour</div>
+    </div>
+    <div class="clay-photo-frame" id="photo-frame-2">
+      <div class="photo-inner">
+        <img src="assets/interview2.jpg" alt="Interviewing founder">
+      </div>
+      <div class="photo-caption">Owner Interview</div>
     </div>
   </div>
 
-  <!-- Keywords: Create / Capture / Sustain -->
-  <div id="keywords-layer">
-    <div class="kw-row" id="kw-creation">
-      <div class="kw-check">✓</div>
-      <div class="kw-label">Create</div>
-    </div>
-    <div class="kw-row" id="kw-capture">
-      <div class="kw-check">✓</div>
-      <div class="kw-label">Capture</div>
-    </div>
-    <div class="kw-row" id="kw-sustain">
-      <div class="kw-check">✓</div>
-      <div class="kw-label">Sustain</div>
+  <!-- Gold Medal Wine Spotlight (Scene 9) -->
+  <div id="wine-spotlight-layer">
+    <div class="wine-glow-bg"></div>
+    <div class="wine-bottle-container">
+      <img src="assets/wine_bottle.png" alt="Gold Medal Wine" class="wine-bottle-img">
+      <div class="medal-badge">🥇</div>
     </div>
   </div>
 
   <div id="runner-wrap">
     <img src="runner.png" alt="Doris running in Waipu"
          onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\'font-size:8vw;filter:drop-shadow(0.3vw 0.5vw 0.3vw rgba(45,52,54,0.15))\'>🏃‍♀️</div>'">
+  </div>
+
+  <!-- Question Doris close-up face -->
+  <div id="doris-question-wrap" class="face-popup">
+    <img src="assets/doris_question.png" alt="Doris Question">
+    <div class="q-mark" style="top: 2%; left: -6%; animation-delay: 0.1s;">?</div>
+    <div class="q-mark" style="top: -10%; left: 16%; animation-delay: 0.35s;">?</div>
+    <div class="q-mark" style="top: -4%; right: -2%; animation-delay: 0.6s;">?</div>
+    <div class="q-mark" style="top: 22%; right: -15%; animation-delay: 0.2s;">?</div>
+  </div>
+
+  <!-- Surprised Doris close-up face -->
+  <div id="doris-surprised-wrap" class="face-popup">
+    <img src="assets/doris_surprised.png" alt="Doris Surprised">
+  </div>
+
+  <!-- Clay car carrying group members -->
+  <div id="car-wrap">
+    <img id="clay-car" src="assets/clay_car.png" alt="Clay Car">
   </div>
 
   <div id="scene-text"></div>
@@ -758,67 +980,55 @@
     <div id="fold-bottom"></div>
   </div>
 
-  <div id="final-scene">
+    <div id="final-scene">
     <div class="final-eyebrow">✦ Waipu Wine Cluster · Group 7 ✦</div>
-    <div class="final-title">Why Shu-Sheng Winery Matters</div>
-    <div class="final-subtitle">A local survival model of Waipu's wine industry</div>
-    <button class="btn-start" id="btn-start">Start Presentation →</button>
-    <div class="final-deco">🥂 🍃 🥂 🍃 🥂 🍃 🥂</div>
+    <div class="final-title">Shu-Sheng Winery's Transformation</div>
+    <div class="final-subtitle">Exploring the Key to Transforming Taiwan's Local Wineries</div>
+    <button id="btn-start" class="btn-start">START PRESENTATION</button>
   </div>
-
-  <div id="progress">
-    <div class="pdot" id="d0"></div>
-    <div class="pdot" id="d1"></div>
-    <div class="pdot" id="d2"></div>
-    <div class="pdot" id="d3"></div>
-    <div class="pdot" id="d4"></div>
-    <div class="pdot" id="d5"></div>
-  </div>
-
-  <!-- Global paper texture overlays to bind photos and 3D scenes -->
-  <div class="global-paper"></div>
-  <div class="global-paper-grain"></div>
-
-</div>
-
-<script>
+  <script>
   const TEXTS = {
-    1: 'She grew up in Waipu.',
-    2: 'A familiar place, yet often overlooked.',
-    3: 'Then we discovered: gold-medal wines.',
-    4: 'But the real insight came after the interview.',
-    5: 'Three keys to its survival.',
+    1: "Hi, I'm Doris. I love jogging in Waipu, Taichung.",
+    2: "There are many wineries here—even my old bus stop was named after one.",
+    3: "But most of them are barely known—I'd never even heard of them before.",
+    4: "That made me wonder: how have these low-profile wineries survived for so long?",
+    5: "So our team decided to investigate Waipu's winery industry.",
+    6: "Surprisingly, Shu-Sheng Winery—right on my jogging route—had won an international gold medal! That's exactly why we chose to dig deeper into it.",
+    7: "So we immediately paid them a visit to find out more.",
+    8: "We explored their vineyards and interviewed the owner.",
+    9: "Their gold-medal 'Vino Formosa' is the key to their successful transformation!",
   };
 
   const TIMELINE = [
     [1,   400],
-    [2,  5800],
-    [3, 11500],
-    [4, 17000],
-    [5, 22500],
-    [6, 29000],
+    [2,  5650],
+    [3, 10900],
+    [4, 16150],
+    [5, 21400],
+    [6, 26650],
+    [7, 32275],
+    [8, 38275],
+    [9, 44275],
+    [10, 50275],
   ];
 
   const $ = id => document.getElementById(id);
-  const stage     = $('stage');
-  const runner    = $('runner-wrap');
-  const sceneText = $('scene-text');
-  const sign      = $('winery-sign');
-  const building  = $('building');
-  const card      = $('discovery-card');
-  const icons     = $('icons-layer');
-  const kwLayer   = $('keywords-layer');
-  const spotlight = $('shu-sheng-spotlight');
-  const shuStage  = $('shu-sheng-stage-wrap');
-  const shuName   = $('shu-sheng-name-tag');
-  const finalScene = $('final-scene');
-  const foldOverlay = $('fold-overlay');
-  const foldTop   = $('fold-top');
-  const foldBot   = $('fold-bottom');
-  const progress  = $('progress');
-  const dots      = [0,1,2,3,4,5].map(i => $('d'+i));
-
-  function dot(n) { dots.forEach((d,i) => d.classList.toggle('active', i === n)); }
+  const stage          = $('stage');
+  const runner         = $('runner-wrap');
+  const sceneText      = $('scene-text');
+  const sign           = $('winery-sign');
+  const building       = $('building');
+  const card           = $('discovery-card');
+  const icons          = $('icons-layer');
+  const questionDoris  = $('doris-question-wrap');
+  const surprisedDoris = $('doris-surprised-wrap');
+  const car            = $('car-wrap');
+  const interviewLayer = $('interview-photos-layer');
+  const wineLayer      = $('wine-spotlight-layer');
+  const finalScene     = $('final-scene');
+  const foldOverlay    = $('fold-overlay');
+  const foldTop        = $('fold-top');
+  const foldBot        = $('fold-bottom');
 
   function showText(msg, delay = 900) {
     sceneText.classList.remove('visible');
@@ -826,9 +1036,37 @@
   }
   function hideText() { sceneText.classList.remove('visible'); }
 
-  function moveRunner(leftPct, ms = 2200, stepsN = 6) {
-    runner.style.transition = `left ${ms}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+  function moveRunner(leftPct, bottomPct = null, scale = null, ms = 2200) {
+    runner.style.transition = `left ${ms}ms cubic-bezier(0.4, 0, 0.2, 1), bottom ${ms}ms cubic-bezier(0.4, 0, 0.2, 1), transform ${ms}ms cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease`;
     runner.style.left = leftPct + '%';
+    if (bottomPct !== null) runner.style.bottom = bottomPct + '%';
+    if (scale !== null) runner.style.transform = `scale(${scale})`;
+  }
+
+  /* ─── Background music (autoplay is blocked until the user interacts) ─── */
+  const bgm = new Audio('assets/bgm.mp3');
+  bgm.loop = true;
+  bgm.volume = 0.45;
+
+  function unlockBgm() {
+    bgm.play().catch(() => {});
+    ['click', 'keydown', 'touchstart'].forEach(evt => document.removeEventListener(evt, unlockBgm));
+  }
+  ['click', 'keydown', 'touchstart'].forEach(evt => document.addEventListener(evt, unlockBgm));
+  bgm.play().catch(() => {}); // works immediately if the browser allows it
+
+  function fadeOutBgm(duration = 1500) {
+    const steps = 30;
+    const startVolume = bgm.volume;
+    let count = 0;
+    const fade = setInterval(() => {
+      count++;
+      bgm.volume = Math.max(0, startVolume * (1 - count / steps));
+      if (count >= steps) {
+        clearInterval(fade);
+        bgm.pause();
+      }
+    }, duration / steps);
   }
 
   function origamiFold(callback) {
@@ -849,19 +1087,20 @@
 
   const SCENES = {
     1() {
-      dot(0);
+      runner.style.opacity = '1';
       runner.classList.add('running');
       runner.classList.remove('idle');
-      moveRunner(22, 3400);
+      moveRunner(60, 38, 0.5, 3400);
       /* subtle Ken Burns on clay background */
       const bg = document.querySelector('.layer-bg-main');
       if (bg) { bg.style.transform = 'scale(1.04) translateX(-1%)'; }
       showText(TEXTS[1]);
     },
     2() {
-      dot(1);
       hideText();
-      moveRunner(44, 2800);
+      runner.classList.add('running');
+      runner.classList.remove('idle');
+      moveRunner(45, 28, 0.55, 2800);
       const bg = document.querySelector('.layer-bg-main');
       if (bg) { bg.style.transform = 'scale(1.07) translateX(-2.5%)'; }
       setTimeout(() => {
@@ -871,75 +1110,99 @@
       }, 600);
     },
     3() {
-      dot(2);
       hideText();
-      runner.classList.remove('running');
-      runner.classList.add('idle');
-      moveRunner(32, 600);
+      runner.classList.add('running');
+      runner.classList.remove('idle');
+      moveRunner(35, 22, 0.75, 2400);
       setTimeout(() => {
-        card.classList.add('visible');
         showText(TEXTS[3], 700);
       }, 700);
     },
     4() {
-      dot(3);
       hideText();
-      card.classList.remove('visible');
-      runner.classList.add('running');
-      runner.classList.remove('idle');
-      moveRunner(53, 1800);
+      runner.classList.remove('running');
+      runner.classList.add('idle');
+      moveRunner(38, 24, 0.7, 1500); // stops/backs up slightly, sad
+      setTimeout(() => {
+        runner.style.transition = 'opacity 0.6s ease';
+        runner.style.opacity = '0'; // Doris's running journey is done — hand off to the close-up
+        questionDoris.classList.add('visible');
+        showText(TEXTS[4], 500);
+      }, 600);
+    },
+    5() {
+      hideText();
+      questionDoris.classList.remove('visible');
+      sign.classList.remove('visible');
+      building.classList.remove('visible');
       setTimeout(() => {
         icons.classList.add('visible');
         ['ic-grape','ic-wine','ic-note','ic-map'].forEach((id, i) => {
           setTimeout(() => $(id).classList.add('pop'), i * 340);
         });
-        showText(TEXTS[4], 500);
-      }, 900);
-    },
-    5() {
-      dot(4);
-      hideText();
-      icons.classList.remove('visible');
-
-      /* Fade out runner, dim background */
-      runner.style.transition = 'opacity 0.6s ease, left 0.5s ease';
-      runner.style.opacity = '0';
-      stage.classList.add('spotlight-mode');
-
-      /* Reveal Shu-Sheng spotlight with winery backdrop */
-      spotlight.classList.add('visible');
-      setTimeout(() => shuStage.classList.add('visible'), 300);
-      setTimeout(() => shuName.classList.add('visible'), 800);
-
-      /* Stagger keywords: Create → Capture → Sustain */
-      kwLayer.classList.add('visible');
-      ['kw-creation','kw-capture','kw-sustain'].forEach((id, i) => {
-        setTimeout(() => $(id).classList.add('visible'), 1200 + i * 900);
-      });
-      showText(TEXTS[5], 600);
+        showText(TEXTS[5], 500);
+      }, 600);
     },
     6() {
-      dot(5);
       hideText();
-      spotlight.classList.remove('visible');
-      shuStage.classList.remove('visible');
-      shuName.classList.remove('visible');
-      kwLayer.classList.remove('visible');
-      ['kw-creation','kw-capture','kw-sustain'].forEach(id => $(id).classList.remove('visible'));
-      stage.classList.remove('spotlight-mode');
+      icons.classList.remove('visible');
+      setTimeout(() => {
+        // Pop surprised face close-up!
+        surprisedDoris.classList.add('visible');
+        card.classList.add('visible'); // Show Gold Medal card
+        showText(TEXTS[6], 600);
+      }, 900);
+    },
+    7() {
+      hideText();
+      surprisedDoris.classList.remove('visible');
+      card.classList.remove('visible');
 
-      progress.style.transition = 'opacity 0.3s ease';
-      progress.style.opacity = '0';
+      /* Introduce bouncing group clay car */
+      car.classList.add('visible');
+      car.classList.add('bouncing');
+      
+      // Stop bouncing when they arrive
+      setTimeout(() => {
+        car.classList.remove('bouncing');
+      }, 3500);
+      
+      showText(TEXTS[7], 600);
+    },
+    8() {
+      hideText();
+      car.classList.remove('visible');
+      
+      /* Dim background, reveal polaroid photos of interview */
+      stage.classList.add('spotlight-mode');
+      interviewLayer.classList.add('visible');
+      
+      showText(TEXTS[8], 600);
+    },
+    9() {
+      hideText();
+      interviewLayer.classList.remove('visible');
+      
+      /* Show Gold Medal Wine with glowing background */
+      wineLayer.classList.add('visible');
+      
+      showText(TEXTS[9], 600);
+    },
+    10() {
+      hideText();
+      wineLayer.classList.remove('visible');
+      stage.classList.remove('spotlight-mode');
+      fadeOutBgm();
 
       setTimeout(() => {
         origamiFold(() => finalScene.classList.add('visible'));
       }, 400);
-    },
+    }
   };
 
   window.addEventListener('load', () => {
     runner.style.transition = 'none';
-    runner.style.left = '-14%';
+    runner.style.left = '75%'; runner.style.bottom = '50%'; runner.style.transform = 'scale(0.32)';
     runner.style.opacity = '1';
     TIMELINE.forEach(([scene, delay]) => setTimeout(() => SCENES[scene](), delay));
   });
