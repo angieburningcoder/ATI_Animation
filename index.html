@@ -90,6 +90,19 @@
       filter: saturate(0.68) contrast(0.96);
     }
 
+    /* Crossfades over the main bg when Doris mentions "many wineries" (Scene 2) */
+    .layer-bg-wineries {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 42%;
+      opacity: 0;
+      transition: opacity 1.3s ease;
+      filter: saturate(0.68) contrast(0.96);
+    }
+    .layer-bg-wineries.visible { opacity: 1; }
+
     .paper-overlay {
       position: absolute;
       inset: 0;
@@ -156,67 +169,6 @@
       background:
         radial-gradient(ellipse 90% 70% at 50% 50%, transparent 40%, rgba(74, 48, 32, 0.07) 100%),
         radial-gradient(ellipse 60% 50% at 50% 85%, rgba(232, 148, 58, 0.12) 0%, transparent 70%);
-    }
-
-    /* ─── CLAY WINERY BUILDING (generated asset) ──── */
-    #building {
-      position: absolute;
-      bottom: 18%; right: 2%;
-      width: 30%;
-      height: auto;
-      opacity: 0;
-      transform: translateY(1.2vw) scale(0.88);
-      transition: opacity 0.7s ease, transform 0.7s var(--ease-bounce);
-      pointer-events: none;
-      z-index: 8;
-      filter: drop-shadow(0.8vw 1.1vw 0 var(--clay-brown)) saturate(0.75);
-    }
-    #building.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      animation: stop-motion-jitter 2s steps(4) infinite;
-    }
-
-    /* ─── WINERY SIGN ─────────────────────────────── */
-    #winery-sign {
-      position: absolute;
-      bottom: 33%; right: 23%;
-      opacity: 0;
-      transform: translateY(1vw) scale(0.92);
-      transition: opacity 0.5s ease, transform 0.5s var(--ease-bounce);
-      z-index: 9;
-    }
-    #winery-sign.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      animation: stop-motion-jitter 1.8s steps(4) infinite;
-    }
-
-    .sign-board {
-      background: var(--clay-terracotta);
-      border: 0.25vw solid var(--clay-brown);
-      border-radius: var(--radius-chunky-1);
-      color: #fff8f0;
-      padding: 0.55vw 1.5vw;
-      text-align: center;
-      box-shadow: var(--clay-shadow-puffy);
-      filter: saturate(0.78);
-    }
-    .sign-cn {
-      font-size: 1.3vw; font-weight: 800; letter-spacing: 0.15em;
-    }
-    .sign-en {
-      font-size: 0.65vw; margin-top: 0.15vw; opacity: 0.85; font-weight: 600;
-      letter-spacing: 0.08em;
-    }
-    .sign-post {
-      width: 0.6vw; height: 4vw;
-      background: var(--clay-brown);
-      margin: -0.1vw auto 0;
-      border-radius: 0.3vw 0.4vw 0.3vw 0.4vw / 1vw 1vw 1vw 1vw;
-      box-shadow:
-        0.3vw 0.3vw 0 rgba(74, 48, 32, 0.15),
-        inset 0.1vw 0.1vw 0.2vw rgba(255, 255, 255, 0.2);
     }
 
     /* ─── RUNNER (Doris) ──────────────────────────── */
@@ -361,15 +313,16 @@
 
     .shu-sheng-stage-wrap {
       position: absolute;
-      left: 3%; top: 50%;
-      transform: translateY(-50%) scale(0.82);
-      width: 54%; height: 72%;
+      left: 4%; top: 7%;
+      width: 27%; height: 38%;
+      transform: scale(0.8);
       opacity: 0;
+      z-index: 21;
       transition: opacity 0.6s ease, transform 0.8s var(--ease-bounce);
     }
     .shu-sheng-stage-wrap.visible {
       opacity: 1;
-      transform: translateY(-50%) scale(1);
+      transform: scale(1);
     }
 
     .shu-sheng-stage {
@@ -427,6 +380,7 @@
       bottom: 1.2vw; left: 50%;
       transform: translateX(-50%) translateY(0.5vw);
       opacity: 0;
+      white-space: nowrap;
       background: var(--clay-terracotta);
       border: 0.25vw solid var(--clay-brown);
       border-radius: var(--radius-chunky-1);
@@ -664,9 +618,7 @@
     }
 
     /* Dim main scene during spotlight */
-    #stage.spotlight-mode .bg-stack,
-    #stage.spotlight-mode #building,
-    #stage.spotlight-mode #winery-sign {
+    #stage.spotlight-mode .bg-stack {
       filter: blur(4px) brightness(0.6) saturate(0.85);
       transition: filter 0.7s ease;
     }
@@ -894,19 +846,9 @@
 
   <div class="bg-stack">
     <img class="layer-bg-main" src="assets/bg-main-scene.png" alt="">
+    <img class="layer-bg-wineries" src="assets/several_wineries.png" alt="">
     <div class="paper-overlay"></div>
     <div class="paper-overlay-grain"></div>
-  </div>
-
-  <!-- AI-generated clay winery building -->
-  <img id="building" src="assets/clay-winery-building.png" alt="樹生酒莊">
-
-  <div id="winery-sign">
-    <div class="sign-board">
-      <div class="sign-cn">樹生酒莊</div>
-      <div class="sign-en">Shu-Sheng Winery</div>
-    </div>
-    <div class="sign-post"></div>
   </div>
 
   <div id="discovery-card">
@@ -915,6 +857,19 @@
     </div>
     <div class="card-title">Gold Medal Wines</div>
     <div class="card-sub">International Award Winner</div>
+  </div>
+
+  <!-- Shu-Sheng photo pulled out from the row of wineries (Scene 6) -->
+  <div id="shu-sheng-stage-wrap" class="shu-sheng-stage-wrap">
+    <div class="shu-sheng-stage">
+      <div class="shu-sheng-photo-wrap">
+        <img class="shu-sheng-photo" src="assets/shu-sheng-photo.png" alt="樹生酒莊">
+      </div>
+    </div>
+    <div id="shu-sheng-name-tag" class="shu-sheng-name-tag">
+      <span>WAIPU, TAICHUNG</span>
+      SHU-SHENG
+    </div>
   </div>
 
   <div id="icons-layer">
@@ -1016,8 +971,6 @@
   const stage          = $('stage');
   const runner         = $('runner-wrap');
   const sceneText      = $('scene-text');
-  const sign           = $('winery-sign');
-  const building       = $('building');
   const card           = $('discovery-card');
   const icons          = $('icons-layer');
   const questionDoris  = $('doris-question-wrap');
@@ -1025,6 +978,9 @@
   const car            = $('car-wrap');
   const interviewLayer = $('interview-photos-layer');
   const wineLayer      = $('wine-spotlight-layer');
+  const bgWineries     = document.querySelector('.layer-bg-wineries');
+  const shuShengStage  = $('shu-sheng-stage-wrap');
+  const shuShengTag    = $('shu-sheng-name-tag');
   const finalScene     = $('final-scene');
   const foldOverlay    = $('fold-overlay');
   const foldTop        = $('fold-top');
@@ -1104,8 +1060,7 @@
       const bg = document.querySelector('.layer-bg-main');
       if (bg) { bg.style.transform = 'scale(1.07) translateX(-2.5%)'; }
       setTimeout(() => {
-        sign.classList.add('visible');
-        building.classList.add('visible');
+        bgWineries.classList.add('visible'); // crossfade to the row of wineries along the road
         showText(TEXTS[2], 700);
       }, 600);
     },
@@ -1133,8 +1088,6 @@
     5() {
       hideText();
       questionDoris.classList.remove('visible');
-      sign.classList.remove('visible');
-      building.classList.remove('visible');
       setTimeout(() => {
         icons.classList.add('visible');
         ['ic-grape','ic-wine','ic-note','ic-map'].forEach((id, i) => {
@@ -1146,10 +1099,13 @@
     6() {
       hideText();
       icons.classList.remove('visible');
+      bgWineries.classList.remove('visible'); // crossfade back from "many wineries" to a single one — Shu-Sheng
       setTimeout(() => {
         // Pop surprised face close-up!
         surprisedDoris.classList.add('visible');
         card.classList.add('visible'); // Show Gold Medal card
+        shuShengStage.classList.add('visible'); // pull out Shu-Sheng's photo on its own
+        setTimeout(() => shuShengTag.classList.add('visible'), 450);
         showText(TEXTS[6], 600);
       }, 900);
     },
@@ -1157,6 +1113,8 @@
       hideText();
       surprisedDoris.classList.remove('visible');
       card.classList.remove('visible');
+      shuShengStage.classList.remove('visible');
+      shuShengTag.classList.remove('visible');
 
       /* Introduce bouncing group clay car */
       car.classList.add('visible');
