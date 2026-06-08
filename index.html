@@ -314,7 +314,8 @@
     .shu-sheng-stage-wrap {
       position: absolute;
       left: 4%; top: 7%;
-      width: 27%; height: 38%;
+      width: 27%; height: auto;
+      display: flex; flex-direction: column; align-items: center; gap: 0.6vw;
       transform: scale(0.8);
       opacity: 0;
       z-index: 21;
@@ -327,7 +328,7 @@
 
     .shu-sheng-stage {
       position: relative;
-      width: 100%; height: 100%;
+      width: 100%; height: 17vw;
       background: var(--clay-surface);
       border: 0.4vw solid var(--clay-brown);
       border-radius: var(--radius-chunky-2);
@@ -369,41 +370,39 @@
     .shu-sheng-photo {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
       object-position: center center;
       filter: contrast(1.04) brightness(1.03) saturate(0.9) sepia(0.06);
       border-radius: calc(var(--radius-chunky) * 0.5);
     }
 
     .shu-sheng-name-tag {
-      position: absolute;
-      bottom: 1.2vw; left: 50%;
-      transform: translateX(-50%) translateY(0.5vw);
+      position: static;
       opacity: 0;
-      white-space: nowrap;
       background: var(--clay-terracotta);
-      border: 0.25vw solid var(--clay-brown);
+      border: 0.22vw solid var(--clay-brown);
       border-radius: var(--radius-chunky-1);
       color: #fff8f0;
-      padding: 0.55vw 2.2vw;
-      font-size: 1.5vw;
+      padding: 0.4vw 1.6vw;
+      font-size: 1.1vw;
       font-weight: 900;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.15em;
+      text-align: center;
       box-shadow: var(--clay-shadow-puffy);
-      z-index: 5;
+      transform: translateY(0.4vw) scale(0.9);
       transition: opacity 0.5s ease 0.4s, transform 0.5s var(--ease-bounce) 0.4s;
     }
     .shu-sheng-name-tag.visible {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      animation: stop-motion-jitter-centered 1.5s steps(4) infinite;
+      transform: translateY(0) scale(1);
+      animation: stop-motion-jitter 1.5s steps(4) infinite;
     }
     .shu-sheng-name-tag span {
       color: var(--clay-mustard);
-      font-size: 0.7vw;
+      font-size: 0.65vw;
       display: block;
-      letter-spacing: 0.35em;
-      margin-bottom: 0.15vw;
+      letter-spacing: 0.3em;
+      margin-bottom: 0.1vw;
       font-weight: 800;
     }
 
@@ -526,23 +525,65 @@
     #fold-bottom.fold { transform: perspective(2000px) rotateX(105deg);  }
 
     /* ─── FINAL SCENE — warm clay room tone ───────── */
-    #final-scene {
+    /* ─── LANDING SCREEN (centered, no photo) ─── */
+    #landing-screen {
       position: absolute; inset: 0;
       background: linear-gradient(160deg, #5a3820 0%, var(--clay-brown) 45%, #4a2e18 100%);
       display: flex; flex-direction: column;
       justify-content: center; align-items: center;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+      z-index: 51;
+    }
+    #landing-screen::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 80%, rgba(232, 148, 58, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #landing-screen.hidden { opacity: 0; pointer-events: none; }
+
+    /* ─── ENDING SCREEN (left text + right photo) ─── */
+    #final-scene {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, #5a3820 0%, var(--clay-brown) 45%, #4a2e18 100%);
+      display: flex; flex-direction: row;
+      justify-content: space-between; align-items: stretch;
+      padding: 0 4% 0 9%;
       opacity: 0; pointer-events: none;
       transition: opacity 0.6s ease;
       z-index: 50;
     }
     #final-scene::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: radial-gradient(ellipse 70% 50% at 50% 80%, rgba(232, 148, 58, 0.15) 0%, transparent 70%);
       pointer-events: none;
     }
     #final-scene.visible { opacity: 1; pointer-events: all; }
+
+    .ending-left {
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+      flex: 1; z-index: 1;
+    }
+    .ending-photo-wrap {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1;
+    }
+    .ending-clay-frame {
+      width: 30vw;
+      background: var(--clay-surface);
+      border: 0.28vw solid var(--clay-brown);
+      border-radius: var(--radius-chunky-2);
+      padding: 0.9vw;
+      box-shadow: var(--clay-lift);
+      filter: saturate(0.88);
+      transform: rotate(-3deg);
+      animation: stop-motion-jitter 2.5s steps(4) infinite;
+    }
+    .ending-clay-frame .photo-inner { height: 19vw; }
 
     .final-eyebrow {
       font-size: 0.75vw; color: var(--clay-mustard);
@@ -551,14 +592,18 @@
     }
     .final-title {
       font-size: 2.8vw; color: var(--clay-cream);
-      font-weight: 900; text-align: center;
-      line-height: 1.3; margin-bottom: 0.9vw; max-width: 72%;
+      font-weight: 900; line-height: 1.3;
+      margin-bottom: 0.9vw; max-width: 72%;
     }
+    #landing-screen .final-title  { text-align: center; max-width: 80%; }
+    .ending-left .final-title     { text-align: left;   max-width: 90%; }
+
     .final-subtitle {
       font-size: 1.15vw; color: var(--clay-warm);
-      text-align: center;
       margin-bottom: 3vw; font-weight: 700;
     }
+    #landing-screen .final-subtitle { text-align: center; }
+    .ending-left .final-subtitle    { text-align: left; }
     .btn-start {
       padding: 0.8vw 3.2vw;
       background: var(--clay-mustard);
@@ -863,7 +908,7 @@
   <div id="shu-sheng-stage-wrap" class="shu-sheng-stage-wrap">
     <div class="shu-sheng-stage">
       <div class="shu-sheng-photo-wrap">
-        <img class="shu-sheng-photo" src="assets/shu-sheng-photo.png" alt="樹生酒莊">
+        <img class="shu-sheng-photo" src="assets/shu-sheng-winery.jpg" alt="樹生酒莊">
       </div>
     </div>
     <div id="shu-sheng-name-tag" class="shu-sheng-name-tag">
@@ -935,15 +980,35 @@
     <div id="fold-bottom"></div>
   </div>
 
-    <div id="final-scene">
+  <!-- Landing Screen -->
+  <!-- Landing Screen -->
+  <div id="landing-screen">
     <div class="final-eyebrow">✦ Waipu Wine Cluster · Group 7 ✦</div>
     <div class="final-title">Shu-Sheng Winery's Transformation</div>
     <div class="final-subtitle">Exploring the Key to Transforming Taiwan's Local Wineries</div>
-    <button id="btn-start" class="btn-start">START PRESENTATION</button>
+    <button id="btn-start" class="btn-start">Start Our Journey!</button>
+  </div>
+
+  <!-- Ending Screen -->
+  <div id="final-scene">
+    <div class="ending-left">
+      <div class="final-eyebrow">✦ Waipu Wine Cluster · Group 7 ✦</div>
+      <div class="final-title">Shu-Sheng Winery's Transformation</div>
+      <div class="final-subtitle">Exploring the Key to Transforming Taiwan's Local Wineries</div>
+      <button id="btn-presentation" class="btn-start">START PRESENTATION</button>
+    </div>
+    <div class="ending-photo-wrap">
+      <div class="ending-clay-frame">
+        <div class="photo-inner">
+          <img src="assets/team-photo.jpg" alt="Team at Shu-Sheng Winery">
+        </div>
+        <div class="photo-caption">At Shu-Sheng Winery 🍇</div>
+      </div>
+    </div>
   </div>
   <script>
   const TEXTS = {
-    1: "Hi, I'm Doris. I love jogging in Waipu, Taichung.",
+    1: "Hi! I'm Doris. As you know, I love jogging in my hometown — Waipu, Taichung.",
     2: "There are many wineries here—even my old bus stop was named after one.",
     3: "But most of them are barely known—I'd never even heard of them before.",
     4: "That made me wonder: how have these low-profile wineries survived for so long?",
@@ -981,6 +1046,7 @@
   const bgWineries     = document.querySelector('.layer-bg-wineries');
   const shuShengStage  = $('shu-sheng-stage-wrap');
   const shuShengTag    = $('shu-sheng-name-tag');
+  const landingScreen  = $('landing-screen');
   const finalScene     = $('final-scene');
   const foldOverlay    = $('fold-overlay');
   const foldTop        = $('fold-top');
@@ -999,17 +1065,22 @@
     if (scale !== null) runner.style.transform = `scale(${scale})`;
   }
 
-  /* ─── Background music (autoplay is blocked until the user interacts) ─── */
+  /* ─── Background music ─── */
   const bgm = new Audio('assets/bgm.mp3');
   bgm.loop = true;
   bgm.volume = 0.45;
 
-  function unlockBgm() {
-    bgm.play().catch(() => {});
-    ['click', 'keydown', 'touchstart'].forEach(evt => document.removeEventListener(evt, unlockBgm));
+  function fadeAudio(audio, targetVol, duration = 600) {
+    const steps = 20;
+    const startVol = audio.volume;
+    const diff = targetVol - startVol;
+    let count = 0;
+    const id = setInterval(() => {
+      count++;
+      audio.volume = Math.max(0, Math.min(1, startVol + diff * (count / steps)));
+      if (count >= steps) clearInterval(id);
+    }, duration / steps);
   }
-  ['click', 'keydown', 'touchstart'].forEach(evt => document.addEventListener(evt, unlockBgm));
-  bgm.play().catch(() => {}); // works immediately if the browser allows it
 
   function fadeOutBgm(duration = 1500) {
     const steps = 30;
@@ -1023,6 +1094,46 @@
         bgm.pause();
       }
     }, duration / steps);
+  }
+
+  /* ─── Narration audio files (scenes 1–9) ─── */
+  const narrations = {};
+  for (let i = 1; i <= 9; i++) {
+    narrations[i] = new Audio(`旁白/${i}.m4a`);
+  }
+
+  let activeNarration = null;
+
+  function playNarration(n, callback) {
+    if (activeNarration) {
+      activeNarration.pause();
+      activeNarration.currentTime = 0;
+      activeNarration.onended = null;
+    }
+    const audio = narrations[n];
+    if (!audio) { if (callback) callback(); return; }
+
+    activeNarration = audio;
+    audio.currentTime = 0;
+    fadeAudio(bgm, 0.09); // duck BGM
+
+    audio.onended = () => {
+      activeNarration = null;
+      fadeAudio(bgm, 0.45); // restore BGM
+      if (callback) setTimeout(callback, 500);
+    };
+
+    audio.play().catch(() => {
+      // Fallback: advance scene after a fixed delay if audio blocked
+      if (callback) setTimeout(callback, 4000);
+    });
+  }
+
+  function runScene(n) {
+    SCENES[n]();
+    if (n <= 9) {
+      playNarration(n, () => runScene(n + 1));
+    }
   }
 
   function origamiFold(callback) {
@@ -1162,11 +1273,17 @@
     runner.style.transition = 'none';
     runner.style.left = '75%'; runner.style.bottom = '50%'; runner.style.transform = 'scale(0.32)';
     runner.style.opacity = '1';
-    TIMELINE.forEach(([scene, delay]) => setTimeout(() => SCENES[scene](), delay));
+    // Animation starts only when user clicks START
   });
 
   $('btn-start').addEventListener('click', () => {
-    alert('Presentation starting!\n(Wire this to your slide navigation.)');
+    landingScreen.classList.add('hidden');
+    bgm.play().catch(() => {});
+    setTimeout(() => runScene(1), 400);
+  });
+
+  $('btn-presentation').addEventListener('click', () => {
+    window.open('https://canva.link/w7ihpo8yzgs4ib2', '_blank');
   });
 </script>
 </body>
